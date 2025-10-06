@@ -1,0 +1,202 @@
+<?php
+require_once 'inc/config.php';
+require_once 'inc/db.php';
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (!empty($_SESSION['user'])) {
+    redirect('dashboard.php');
+}
+
+$page_title = 'Home - ' . SITE_NAME;
+include 'inc/header.php';
+
+// Fetch most popular packages for carousel (most booked or latest 5)
+$stmt = $pdo->query("SELECT p.*, COUNT(b.id) as booking_count 
+                     FROM packages p 
+                     LEFT JOIN bookings b ON p.id = b.package_id 
+                     GROUP BY p.id 
+                     ORDER BY booking_count DESC, p.created_at DESC 
+                     LIMIT 5");
+$carousel_packages = $stmt->fetchAll();
+
+if (empty($carousel_packages)) {
+    $stmt = $pdo->query("SELECT * FROM packages ORDER BY created_at DESC LIMIT 5");
+    $carousel_packages = $stmt->fetchAll();
+}
+
+// fetch featured packages
+$stm = $pdo->query("SELECT * FROM packages ORDER BY id ASC LIMIT 3");
+$packages = $stm->fetchAll();
+
+// Helper to handle both external and local images with fallback
+function package_image($pkg, $size = '800x400') {
+    // Try image_url first
+    if (!empty($pkg['image_url'])) {
+        if (preg_match('/^https?:\/\//i', $pkg['image_url'])) {
+            return htmlspecialchars($pkg['image_url']);
+        }
+        return upload($pkg['image_url']);
+    }
+    
+    // Try image field
+    if (!empty($pkg['image'])) {
+        if (preg_match('/^https?:\/\//i', $pkg['image'])) {
+            return htmlspecialchars($pkg['image']);
+        }
+        return upload($pkg['image']);
+    }
+    
+    // Fallback to placeholder
+    $title = isset($pkg['title']) ? urlencode($pkg['title']) : 'Package';
+    return "https://via.placeholder.com/{$size}/0d6efd/ffffff?text={$title}";
+}
+?>
+
+<!-- Hero Carousel -->
+<div id="heroCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <?php foreach ($carousel_packages as $index => $package): ?>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="<?= $index ?>" 
+                    class="<?= $index === 0 ? 'active' : '' ?>" aria-current="<?= $index === 0 ? 'true' : 'false' ?>" 
+                    aria-label="Slide <?= $index + 1 ?>"></button>
+        <?php endforeach; ?>
+    </div>
+    <div class="carousel-inner">
+        <?php foreach ($carousel_packages as $index => $package): ?>
+            <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+                <img src="<?= package_image($package, '1200x500') ?>" 
+                     class="d-block w-100" 
+                     alt="<?= htmlspecialchars($package['title']) ?>"
+                     style="height: 500px; object-fit: cover;"
+                     onerror="this.src='https://via.placeholder.com/1200x500/0d6efd/ffffff?text=<?= urlencode($package['title']) ?>'">
+                <div class="carousel-caption d-none d-md-block">
+                    <div class="bg-dark bg-opacity-75 p-4 rounded">
+                        <h2 class="display-5 fw-bold"><?= htmlspecialchars($package['title']) ?></h2>
+                        <p class="lead"><?= htmlspecialchars($package['description'] ?? '') ?></p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="h4 text-warning mb-0">₱<?= number_format($package['price']) ?></span>
+                            <a href="<?= url('package.php?id=' . $package['id']) ?>" class="btn btn-primary btn-lg">
+                                <i class="bi bi-calendar-plus me-2"></i>Book Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<!-- Welcome Section -->
+<div class="row mb-5">
+    <div class="col-lg-8 mx-auto text-center">
+        <h1 class="display-4 fw-bold mb-4">Welcome to <?= SITE_NAME ?></h1>
+        <p class="lead text-muted mb-4">
+            Discover amazing destinations and create unforgettable memories with our carefully curated tour packages. 
+            From adventure seekers to relaxation enthusiasts, we have something for everyone.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="<?= url('packages.php') ?>" class="btn btn-primary btn-lg">
+                <i class="bi bi-box me-2"></i>Browse Packages
+            </a>
+            <?php if (empty($_SESSION['user'])): ?>
+                <a href="<?= url('register.php') ?>" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-person-plus me-2"></i>Join Now
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row mb-5">
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+                <i class="bi bi-shield-check text-primary" style="font-size: 3rem;"></i>
+                <h4 class="mt-3">Safe & Secure</h4>
+                <p class="text-muted">Your safety is our top priority. All our tours are carefully planned and insured.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+                <i class="bi bi-people text-primary" style="font-size: 3rem;"></i>
+                <h4 class="mt-3">Expert Guides</h4>
+                <p class="text-muted">Experienced local guides who know the best spots and hidden gems.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+                <i class="bi bi-heart text-primary" style="font-size: 3rem;"></i>
+                <h4 class="mt-3">Unforgettable</h4>
+                <p class="text-muted">Create memories that will last a lifetime with our unique experiences.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-3">
+                        <h3 class="fw-bold"><?= count($carousel_packages) ?>+</h3>
+                        <p class="mb-0">Tour Packages</p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <h3 class="fw-bold">1000+</h3>
+                        <p class="mb-0">Happy Travelers</p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <h3 class="fw-bold">50+</h3>
+                        <p class="mb-0">Destinations</p>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <h3 class="fw-bold">24/7</h3>
+                        <p class="mb-0">Support</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Featured Packages -->
+<hr>
+<h2 class="mt-4">Featured Packages</h2>
+<div class="row">
+  <?php foreach($packages as $p): ?>
+    <div class="col-md-4">
+      <div class="card mb-3 shadow-sm">
+        <img src="<?= package_image($p, '400x200') ?>" 
+             class="card-img-top" 
+             style="height:200px;object-fit:cover"
+             alt="<?= htmlspecialchars($p['title']) ?>"
+             onerror="this.src='https://via.placeholder.com/400x200/0d6efd/ffffff?text=<?= urlencode($p['title']) ?>'">
+        <div class="card-body">
+          <h5 class="card-title"><?= htmlspecialchars($p['title']) ?></h5>
+          <p class="card-text text-muted"><?= intval($p['days']) ?> days • ₱<?= number_format($p['price'],0) ?></p>
+          <a href="package.php?id=<?= $p['id'] ?>" class="btn btn-outline-primary">View & Book</a>
+        </div>
+      </div>
+    </div>
+  <?php endforeach; ?>
+</div>
+
+<?php include 'inc/footer.php'; ?>

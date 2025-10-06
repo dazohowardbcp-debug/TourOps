@@ -1,0 +1,11 @@
+Error Report for Project: C:\xampp\htdocs\tourops
+
+Errors in C:\xampp\htdocs\tourops\assets\css\styles.css:
+
+
+Errors in C:\xampp\htdocs\tourops\assets\js\main.js:
+
+
+Errors in C:\xampp\htdocs\tourops\assets\js\react-app.js:
+
+

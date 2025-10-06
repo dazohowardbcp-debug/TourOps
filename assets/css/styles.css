@@ -1,0 +1,514 @@
+/* Tour Operations Management System - Main Stylesheet */
+
+/* ===== Light Theme (Default) ===== */
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+    
+    /* Light Theme Colors */
+    --body-bg: #f8f9fa;
+    --body-bg-alt: #ffffff;
+    --text-color: #212529;
+    --text-muted: #6c757d;
+    --border-color: #dee2e6;
+    --card-bg: #ffffff;
+    --card-hover-bg: #f8f9fa;
+    --navbar-bg: var(--footer-bg);
+    --footer-bg: #212529;
+    
+    /* Shadows */
+    --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    
+    /* Other */
+    --border-radius: 0.5rem;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark mode: subtle gradient background for depth */
+[data-bs-theme="dark"] body {
+    background: radial-gradient(1200px 600px at 10% -10%, rgba(88,166,255,0.10), transparent),
+                radial-gradient(1000px 500px at 100% 10%, rgba(88,166,255,0.06), transparent),
+                linear-gradient(180deg, var(--body-bg) 0%, #0b0f14 100%);
+    background-attachment: fixed;
+}
+
+/* ===== Dark Theme ===== */
+[data-bs-theme="dark"] {
+    --primary-color: #58a6ff; /* brighter primary for contrast */
+    --secondary-color: #adb5bd;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    
+    /* Dark Theme Colors */
+    --body-bg: #0b0f14;
+    --body-bg-alt: #11161d;
+    --text-color: #dbe5ee;
+    --text-muted: #9aa7b3;
+    --border-color: #2a3036;
+    --card-bg: #11161d;
+    --card-hover-bg: #151c24;
+    --navbar-bg: #0d1117; /* align with footer */
+    --footer-bg: #0d1117;
+    
+    /* Shadows for Dark Mode */
+    --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
+    --shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+}
+
+/* ===== Global Styles ===== */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--body-bg);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ===== Loading Spinner ===== */
+.loading-spinner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.3s ease;
+}
+
+.loading-spinner.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+[data-bs-theme="dark"] .loading-spinner {
+    background-color: rgba(33, 37, 41, 0.9);
+}
+
+/* ===== Navigation Enhancements ===== */
+.navbar {
+    transition: var(--transition);
+    backdrop-filter: blur(10px);
+    background-color: var(--navbar-bg) !important;
+}
+
+/* Dark navbar subtle gradient */
+[data-bs-theme="dark"] .navbar.navbar-dark {
+    background-image: linear-gradient(90deg, rgba(13,17,23,0.95) 0%, rgba(13,17,23,0.92) 40%, rgba(13,17,23,0.95) 100%);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+
+.navbar.scrolled {
+    box-shadow: var(--shadow-lg);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    position: relative;
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+/* Default hover (used for light navbars) */
+.nav-link:hover {
+    color: var(--primary-color) !important;
+}
+
+/* Improve readability on dark primary navbar */
+.navbar-dark .nav-link {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.navbar-dark .nav-link:hover,
+.navbar-dark .nav-link.active {
+    color: #ffffff !important;
+}
+
+.nav-link.active {
+    color: var(--primary-color) !important;
+    font-weight: 600;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 2px;
+    background-color: currentColor;
+    border-radius: 1px;
+}
+
+/* ===== Dropdown Enhancements ===== */
+.dropdown-menu {
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--border-radius);
+    padding: 0.5rem 0;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    transition: var(--transition);
+}
+
+.dropdown-item:hover {
+    background-color: var(--light-color);
+    color: var(--dark-color);
+}
+
+[data-bs-theme="dark"] .dropdown-menu {
+    background-color: #0f141a;
+}
+[data-bs-theme="dark"] .dropdown-item:hover {
+    background-color: #0b1016;
+    color: var(--text-color);
+}
+
+/* ===== Card Enhancements ===== */
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    overflow: hidden;
+}
+
+.card:hover:not(.no-hover) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    background-color: var(--card-hover-bg);
+}
+
+/* Lift header contrast in dark */
+[data-bs-theme="dark"] .card-header,
+[data-bs-theme="dark"] .card-footer {
+    background-color: #0f141a;
+}
+
+.card-header {
+    background-color: var(--body-bg-alt);
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.card-body {
+    padding: 1.5rem;
+    color: var(--text-color);
+}
+
+.card-footer {
+    background-color: var(--body-bg-alt);
+    border-top: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+/* ===== Button Enhancements ===== */
+.btn {
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    transition: var(--transition);
+    border: none;
+    padding: 0.5rem 1rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #3e8fe8;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+}
+
+/* Outline buttons in dark */
+[data-bs-theme="dark"] .btn-outline-secondary {
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+[data-bs-theme="dark"] .btn-outline-secondary:hover {
+    background-color: #0f141a;
+}
+
+/* ===== Form Enhancements ===== */
+.form-control, .form-select {
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    transition: var(--transition);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Floating label pill style for password fields */
+.form-floating > .form-control[type="password"]:not(:placeholder-shown) ~ label,
+.form-floating > .form-control[type="password"]:focus ~ label {
+    background-color: rgba(108, 117, 125, 0.18); /* muted gray */
+    color: var(--text-color);
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.5rem;
+    height: auto;
+    line-height: 1.2;
+    left: 0.75rem;
+    top: -0.45rem;
+    z-index: 2;
+    box-shadow: 0 0 0 1px var(--border-color);
+}
+
+/* Dark theme tweak for the pill */
+[data-bs-theme="dark"] .form-floating > .form-control[type="password"]:not(:placeholder-shown) ~ label,
+[data-bs-theme="dark"] .form-floating > .form-control[type="password"]:focus ~ label {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: var(--text-color);
+    box-shadow: 0 0 0 1px var(--border-color);
+}
+
+/* Dark inputs */
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select,
+[data-bs-theme="dark"] .input-group-text {
+    background-color: #0f141a;
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+[data-bs-theme="dark"] .form-control::placeholder { color: var(--text-muted); }
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+
+/* ===== Table Enhancements ===== */
+.table {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.table th {
+    background-color: var(--body-bg-alt);
+    border-bottom: 2px solid var(--border-color);
+    font-weight: 600;
+    color: var(--text-color);
+    padding: 1rem;
+}
+
+.table td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+[data-bs-theme="dark"] .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Link colors */
+a, .btn-link { transition: var(--transition); }
+[data-bs-theme="dark"] a { color: #8ec1ff; }
+[data-bs-theme="dark"] a:hover { color: #b5d5ff; }
+
+/* Scrollbar (WebKit) */
+[data-bs-theme="dark"] ::-webkit-scrollbar { width: 12px; height: 12px; }
+[data-bs-theme="dark"] ::-webkit-scrollbar-track { background: #0b0f14; }
+[data-bs-theme="dark"] ::-webkit-scrollbar-thumb { background: #1a2230; border-radius: 8px; border: 2px solid #0b0f14; }
+[data-bs-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #223048; }
+
+/* ===== Badge Enhancements ===== */
+.badge {
+    font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    font-weight: 600;
+}
+
+footer p, footer small {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+[data-bs-theme="dark"] footer {
+    border-top: 1px solid var(--border-color);
+}
+
+/* Utility: use footer background color elsewhere */
+.bg-footer {
+    background-color: var(--footer-bg) !important;
+}
+
+/* ===== Image Utilities ===== */
+.img-thumb-50 {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.thumb-box-50 {
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    border-radius: 0.25rem;
+    background-color: var(--body-bg-alt);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.thumb-box-50 img { width: 100%; height: 100%; object-fit: cover; }
+
+.img-thumb-100x75 {
+    width: 100px;
+    height: 75px;
+    object-fit: cover;
+}
+
+.img-thumb-100 {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.thumb-box-100 {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border-radius: 0.25rem;
+    background-color: var(--body-bg-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.thumb-box-100 img { width: 100%; height: 100%; object-fit: cover; }
+
+.package-hero {
+    max-height: 400px;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Package grid card image box */
+.thumb-box-200 {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    background-color: var(--body-bg-alt);
+}
+.thumb-box-200 img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ===== Admin Table Compact Mode ===== */
+.table.table-compact > :not(caption) > * > * {
+  padding: 0.45rem 0.6rem;
+  vertical-align: middle;
+  font-size: 0.925rem;
+}
+.table-responsive.sticky-head {
+  max-height: calc(100vh - 280px);
+  overflow: auto;
+}
+.sticky-head thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--card-bg, #fff);
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+@media (max-width: 992px) {
+    .container {
+        max-width: 960px;
+    }
+    
+    .navbar-nav {
+        margin-top: 1rem;
+    }
+    
+    .nav-link.active::after {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        max-width: 720px;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        max-width: 540px;
+    }
+    
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+    
+    .card-body {
+        padding: 0.75rem;
+    }
+    
+    .btn {
+        padding: 0.375rem 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .table th, .table td {
+        padding: 0.5rem;
+    }
+}
